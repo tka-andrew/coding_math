@@ -1,0 +1,12 @@
+# Trigonometry
+- Normally we are more familiar with **Cartesian Coordinate System**:
+    - towards East is positive x
+    - towards North is positive y
+- However, in **computer screens**, the coordinate is different:
+    - towards East is still positive x
+    - towards South is positive y
+- In Math, normally how we measures angle is: 
+    - East -> North -> West -> South
+- However, since we swapped the y axis, now in computer screen it will be:
+    - East -> North -> West -> South
+- 360 degree = 2 pi

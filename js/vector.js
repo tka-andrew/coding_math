@@ -25,20 +25,20 @@ var vector = {
         return this._y;
     },
 
-    setLength: function () {
+    setMagnitude: function (val) {
         let angle = this.getAngle();
-        this._x = length * Math.cos(angle);
-        this._y = length * Math.sin(angle);
+        this._x = val * Math.cos(angle);
+        this._y = val * Math.sin(angle);
     },
 
-    getLength: function () {
+    getMagnitude: function () {
         return Math.sqrt(this._x * this._x + this._y * this._y);
     },
 
     setAngle: function (val) {
-        let length = this.getLength();
-        this._x = length * Math.cos(val);
-        this._y = length * Math.sin(val);
+        let magnitude = this.getMagnitude();
+        this._x = magnitude * Math.cos(val);
+        this._y = magnitude * Math.sin(val);
     },
 
     getAngle: function (val) {
@@ -78,7 +78,7 @@ var vector = {
         this._x *= val;
         this._y *= val;
     },
-    
+
     // in place update
     divideBy: function (val) {
         this._x /= val;

@@ -73,9 +73,68 @@ var utils = {
             Math.min(min0, max0) <= Math.max(min1, max1);
     },
 
+    segmentIntersect(segment1, segment2) {
+        let p0 = segment1.get_p1();
+        let p1 = segment1.get_p2();
+        let p2 = segment2.get_p1();
+        let p3 = segment2.get_p2();
+        let A1 = p1.y - p0.y;
+        let B1 = p0.x - p1.x;
+        let C1 = A1 * p0.x + B1 * p0.y;
+        let A2 = p3.y - p2.y;
+        let B2 = p2.x - p3.x;
+        let C2 = A2 * p2.x + B2 * p2.y;
+        let denominator = A1 * B2 - A2 * B1;
+
+        if (denominator === 0) {
+            return null;
+        }
+
+        let intersectX = (B2 * C1 - B1 * C2) / denominator;
+        let intersectY = (A1 * C2 - A2 * C1) / denominator;
+        let rx0 = (intersectX - p0.x) / (p1.x - p0.x); // ratio
+        let ry0 = (intersectY - p0.y) / (p1.y - p0.y); // ratio
+        let rx1 = (intersectX - p2.x) / (p3.x - p2.x); // ratio
+        let ry1 = (intersectY - p2.y) / (p3.y - p2.y); // ratio
+
+        if (((rx0 >= 0 && rx0 <= 1) || (ry0 >= 0 && ry0 <= 1)) &&
+            ((rx1 >= 0 && rx1 <= 1) || (ry1 >= 0 && ry1 <= 1))) {
+            return {
+                x: intersectX,
+                y: intersectY
+            }
+        } else {
+            return null;
+        }
+    },
+
     rectIntersect: function (rect0, rect1) {
         return this.rangeIntersect(rect0.x, rect0.x + rect0.width, rect1.x, rect1.x + rect1.width) &&
             this.rangeIntersect(rect0.y, rect0.y + rect0.height, rect1.y, rect1.y + rect1.height)
+    },
+
+    quadrilateralIntersect: function (q1, q2) {
+        let q1LineList = [
+            lineSegment.create(q1.get_p1(), q1.get_p2()),
+            lineSegment.create(q1.get_p2(), q1.get_p3()),
+            lineSegment.create(q1.get_p3(), q1.get_p4()),
+            lineSegment.create(q1.get_p4(), q1.get_p1()),
+        ]
+        let q2LineList = [
+            lineSegment.create(q2.get_p1(), q2.get_p2()),
+            lineSegment.create(q2.get_p2(), q2.get_p3()),
+            lineSegment.create(q2.get_p3(), q2.get_p4()),
+            lineSegment.create(q2.get_p4(), q2.get_p1()),
+        ]
+        for (let s1 of q1LineList) {
+            for (let s2 of q2LineList) {
+                let intersectPoint = utils.segmentIntersect(s1, s2);
+                if (intersectPoint !== null) {
+                    return intersectPoint;
+                }
+            }
+        }
+        return null;
     }
 
 }

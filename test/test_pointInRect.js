@@ -8,8 +8,8 @@ window.onload = function () {
     let rect0 = {
         x: Math.random() * width,
         y: Math.random() * height,
-        width: -50 + Math.random() * 100,
-        height: -50 + Math.random() * 100,
+        width: 50 + Math.random() * 100,
+        height: 50 + Math.random() * 100,
     };
 
     context.clearRect(0, 0, width, height); // to clear everything

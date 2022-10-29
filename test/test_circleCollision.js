@@ -28,7 +28,14 @@ window.onload = function () {
         }
     })
 
+    if (utils.circleCollision(circle0, circle1)) {
+        context.fillStyle = "#f66";
+    } else {
+        context.fillStyle = "#999";
+    }
+
     render();
+
 
     function render() {
         context.clearRect(0, 0, width, height); // to clear everything

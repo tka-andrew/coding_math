@@ -8,8 +8,8 @@ window.onload = function () {
         y: utils.randomRange(0, height)
     };
     let desiredP = {
-        x: utils.randomRange(0, width),
-        y: utils.randomRange(0, height)
+        x: utils.randomRange(width/4, width/2),
+        y: utils.randomRange(height/4, height/2)
     };
     let p2 = {
         x: utils.randomRange(0, width),

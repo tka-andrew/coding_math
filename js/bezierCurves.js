@@ -60,10 +60,10 @@ window.onload = function () {
 
     context.fillStyle = "#000000";
 
-    var pFinal = {};
+    let pFinal = {};
 
     for (var t = 0; t <= 1; t += 0.01) {
-        utils.cubicBezier(p0, p1, p2, p3, t, pFinal);
+        pFinal = utils.cubicBezier(p0, p1, p2, p3, t);
         context.beginPath();
         context.arc(pFinal.x, pFinal.y, 4, 0, Math.PI * 2, false);
         // context.stroke();

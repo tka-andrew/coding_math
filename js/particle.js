@@ -3,6 +3,7 @@ var particle = {
     velocity: null,
     gravity: null,
     mass: 1,
+    radius: 10,
 
     create: function (x, y, speed, direction, grav) {
         let obj = Object.create(this);
@@ -14,7 +15,7 @@ var particle = {
         return obj;
     },
 
-    accelerate: function(acceleration) {
+    accelerate: function (acceleration) {
         this.velocity.addTo(acceleration);
     },
 

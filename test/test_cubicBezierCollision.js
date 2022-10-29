@@ -68,6 +68,11 @@ window.onload = function () {
     function onMouseUp() {
         document.body.style.cursor = 'default';
         currentControl = null;
+        if (utils.cubicBezierIntersect(cubicBezier1, cubicBezier2)) {
+            context.clearRect(0, 0, width, height);
+            drawCubicBezierCurve(cubicBezier1, '#FF0000');
+            drawCubicBezierCurve(cubicBezier2, '#FF0000');
+        }
     }
 
     function onMouseMove() {
@@ -79,47 +84,44 @@ window.onload = function () {
         updateNeeded = true;
     }
 
-    function drawCubicBezierCurve(cbc) {
+    function drawCubicBezierCurve(cbc, fillStyle = "#00FF00") {
         let j1 = cbc.get_j1();
         let cp1 = cbc.get_cp1();
         let cp2 = cbc.get_cp2();
         let j2 = cbc.get_j2();
         drawPoint(j1, 10);
-        drawPoint(cp1, 10, "#FF0000");
-        drawPoint(cp2, 10, "#FF0000");
+        drawPoint(cp1, 10, "#FFA500");
+        drawPoint(cp2, 10, "#FFA500");
         drawPoint(j2, 10);
 
-        context.strokeStyle = "gray";
+        context.lineWidth = 3;
+
+        context.strokeStyle = "orange";
         context.beginPath();
-        context.setLineDash([5, 15]);
+        context.setLineDash([25, 25]);
         context.moveTo(j1.x, j1.y);
         context.lineTo(cp1.x, cp1.y);
         context.stroke();
 
-        context.strokeStyle = "gray";
+        context.strokeStyle = "orange";
         context.beginPath();
-        context.setLineDash([5, 15]);
+        context.setLineDash([25, 25]);
         context.moveTo(j2.x, j2.y);
         context.lineTo(cp2.x, cp2.y);
         context.stroke();
 
         context.setLineDash([]);
 
-        // first point
-        let pFinal = {}
+        let bezierP = {}
         for (var t = 0; t <= 1; t += 0.01) {
-            utils.cubicBezier(j1, cp1, cp2, j2, t, pFinal);
-            drawPoint(pFinal, 4, "#000000")
+            bezierP = utils.cubicBezier(j1, cp1, cp2, j2, t);
+            drawPoint(bezierP, 4, "#000000")
         }
 
-        for (var t = 0; t <= 1; t += 0.05) {
-            utils.cubicBezier(j1, cp1, cp2, j2, t, pFinal);
-            drawPoint(pFinal, 8, "#ff00ff")
+        cbc.set_points();
+        for (let p of cbc.get_points()) {
+            drawPoint(p, 8, fillStyle)
         }
-
-        // the below line is to cover the case where t could be 0.950000002 before += 0.05
-        utils.cubicBezier(j1, cp1, cp2, j2, 1, pFinal);
-        drawPoint(pFinal, 8, "#ff00ff")
     }
 
     document.body.addEventListener("mousedown", onMouseDown);
@@ -132,6 +134,12 @@ window.onload = function () {
 
     var updateNeeded = true;
     render();
+    
+    if (utils.cubicBezierIntersect(cubicBezier1, cubicBezier2)) {
+        context.clearRect(0, 0, width, height);
+        drawCubicBezierCurve(cubicBezier1, '#FF0000');
+        drawCubicBezierCurve(cubicBezier2, '#FF0000');
+    }
 
     function render() {
         if (updateNeeded) {

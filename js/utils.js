@@ -17,8 +17,8 @@ var utils = {
         return pFinal;
     },
 
-    cubicBezier: function (p0, p1, p2, p3, t, pFinal) {
-        pFinal = pFinal || {};
+    cubicBezier: function (p0, p1, p2, p3, t) {
+        let pFinal = {};
         pFinal.x = Math.pow(1 - t, 3) * p0.x +
             Math.pow(1 - t, 2) * 3 * t * p1.x +
             (1 - t) * 3 * t * t * p2.x +
@@ -135,6 +135,32 @@ var utils = {
             }
         }
         return null;
-    }
+    },
 
+    cubicBezierIntersect: function (cbc1, cbc2) {
+        let points1 = cbc1.get_points();
+        let points2 = cbc2.get_points();
+        let lineCbc1 = [];
+        let lineCbc2 = [];
+        let currentP = Array.isArray(points1) ? points1[0] : null;
+        for (let i = 1; i < points1.length; ++i) {
+            let nextP = points1[i];
+            lineCbc1.push(lineSegment.create(currentP, nextP));
+            currentP = nextP;
+        }
+        currentP = Array.isArray(points2) ? points2[0] : null;
+        for (let i = 1; i < points2.length; ++i) {
+            let nextP = points2[i];
+            lineCbc2.push(lineSegment.create(currentP, nextP));
+            currentP = nextP;
+        }
+        for (let s1 of lineCbc1) {
+            for (let s2 of lineCbc2) {
+                let intersectPoint = utils.segmentIntersect(s1, s2);
+                if (intersectPoint !== null) {
+                    return intersectPoint;
+                }
+            }
+        }
+    }
 }

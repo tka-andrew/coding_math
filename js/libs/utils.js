@@ -4,8 +4,8 @@ var utils = {
         return min + Math.random() * (max - min);
     },
 
-    quadraticBezier: function (p0, p1, p2, t, pFinal) {
-        pFinal = pFinal || {};
+    quadraticBezier: function (p0, p1, p2, t) {
+        let pFinal = {};
         pFinal.x = Math.pow(1 - t, 2) * p0.x +
             (1 - t) * 2 * t * p1.x +
             t * t * p2.x;
@@ -143,6 +143,16 @@ var utils = {
         let lineCbc1 = [];
         let lineCbc2 = [];
         let currentP = Array.isArray(points1) ? points1[0] : null;
+
+        // check quadrilateral first
+        // if both quadrilaterals do not intersect, then do not need to proceed with bezier curve checking
+        let q1 = quadrilateral.create(cbc1.get_j1(), cbc1.get_cp1(), cbc1.get_cp2(), cbc1.get_j2())
+        let q2 = quadrilateral.create(cbc2.get_j1(), cbc2.get_cp1(), cbc2.get_cp2(), cbc2.get_j2())
+        let intersectPoint = utils.quadrilateralIntersect(q1, q2);
+        if (intersectPoint !== null) {
+            return intersectPoint;
+        }
+
         for (let i = 1; i < points1.length; ++i) {
             let nextP = points1[i];
             lineCbc1.push(lineSegment.create(currentP, nextP));

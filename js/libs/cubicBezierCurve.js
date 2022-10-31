@@ -71,8 +71,8 @@ var cubicBezierCurve = {
         return this._j2;
     },
 
-    set_points: function (numOfPoints = 20) {
-        let timeSegment = 1 / numOfPoints;
+    set_points: function (numOfSegments = 20) {
+        let timeSegment = 1 / numOfSegments;
         this._points = [];
         let j1 = this.get_j1();
         let cp1 = this.get_cp1();
@@ -83,7 +83,7 @@ var cubicBezierCurve = {
             bezierP = utils.cubicBezier(j1, cp1, cp2, j2, t);
             this._points.push(bezierP)
         }
-        if (this._points.length == numOfPoints) {
+        if (this._points.length == numOfSegments) {
             // should have extra one point
             // the below line is to cover the case such as t could be 0.950000002 before += 0.05
             bezierP = utils.cubicBezier(j1, cp1, cp2, j2, 1);

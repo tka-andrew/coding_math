@@ -103,9 +103,8 @@ var utils = {
                 x: intersectX,
                 y: intersectY
             }
-        } else {
-            return null;
         }
+        return null;
     },
 
     rectIntersect: function (rect0, rect1) {
@@ -137,33 +136,35 @@ var utils = {
         return null;
     },
 
+    getLinesFromPoints: function (points) {
+        let lines = [];
+        if (!Array.isArray(points) || points.length < 2) {
+            return [];
+        }
+        let currentP = points[0];
+        for (let i = 0; i < points.length; ++i) {
+            let nextP = points[i];
+            lines.push(lineSegment.create(currentP, nextP));
+            currentP = nextP;
+        }
+        return lines;
+    },
+
     cubicBezierIntersect: function (cbc1, cbc2) {
         let points1 = cbc1.get_points();
         let points2 = cbc2.get_points();
-        let lineCbc1 = [];
-        let lineCbc2 = [];
-        let currentP = Array.isArray(points1) ? points1[0] : null;
-
         // check quadrilateral first
         // if both quadrilaterals do not intersect, then do not need to proceed with bezier curve checking
         let q1 = quadrilateral.create(cbc1.get_j1(), cbc1.get_cp1(), cbc1.get_cp2(), cbc1.get_j2())
         let q2 = quadrilateral.create(cbc2.get_j1(), cbc2.get_cp1(), cbc2.get_cp2(), cbc2.get_j2())
         let intersectPoint = utils.quadrilateralIntersect(q1, q2);
-        if (intersectPoint !== null) {
-            return intersectPoint;
+        if (intersectPoint === null) {
+            return null;
         }
 
-        for (let i = 1; i < points1.length; ++i) {
-            let nextP = points1[i];
-            lineCbc1.push(lineSegment.create(currentP, nextP));
-            currentP = nextP;
-        }
-        currentP = Array.isArray(points2) ? points2[0] : null;
-        for (let i = 1; i < points2.length; ++i) {
-            let nextP = points2[i];
-            lineCbc2.push(lineSegment.create(currentP, nextP));
-            currentP = nextP;
-        }
+        let lineCbc1 = utils.getLinesFromPoints(points1);
+        let lineCbc2 = utils.getLinesFromPoints(points2);
+
         for (let s1 of lineCbc1) {
             for (let s2 of lineCbc2) {
                 let intersectPoint = utils.segmentIntersect(s1, s2);
